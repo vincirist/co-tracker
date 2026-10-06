@@ -1,0 +1,39 @@
+# uv project for the BOP onboarding scripts (scripts/track_video.py, scripts/run_tracks.py) on top of CoTracker3.
+# Reproduce the environment with `uv sync`; the checkpoint download is in scripts/README.md.
+# Upstream's setup.py stays untouched: name/version match it, the package list is the same find_packages call.
+
+[project]
+name = "cotracker"
+version = "3.0"
+requires-python = "==3.10.*"
+dependencies = [
+    "torch==2.3.1",
+    "torchvision==0.18.1",
+    "numpy<2",
+    "pillow",
+    "opencv-python",
+    "imageio[ffmpeg]",
+    "matplotlib",
+    "scipy",
+    "pycolmap==3.10.0",
+    "viser==0.2.7",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["notebooks*"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]  # CUDA torch wheels; pycolmap 3.10 is x86_64 only
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu121" }
+torchvision = { index = "pytorch-cu121" }
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
